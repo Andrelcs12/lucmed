@@ -1,3 +1,5 @@
+import { Reveal, Stagger, StaggerItem } from "./reveal";
+
 const features = [
   {
     title: "Cadastro de pacientes",
@@ -38,7 +40,7 @@ export function FeaturesSection() {
       className="scroll-mt-20 border-y border-border/70 bg-secondary/35 py-20 sm:py-24"
     >
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-        <div className="max-w-2xl">
+        <Reveal className="max-w-2xl">
           <h2 className="text-3xl font-semibold tracking-tight">
             Funcionalidades do produto
           </h2>
@@ -46,23 +48,22 @@ export function FeaturesSection() {
             Recursos pensados para a operação real de uma clínica — do primeiro
             cadastro ao acompanhamento diário.
           </p>
-        </div>
+        </Reveal>
 
-        <ul className="mt-12 grid gap-6 md:grid-cols-2">
+        <Stagger className="mt-12 grid gap-6 md:grid-cols-2">
           {features.map((feature) => (
-            <li
-              key={feature.title}
-              className="rounded-2xl border border-border/80 bg-background px-5 py-6"
-            >
-              <h3 className="text-lg font-semibold tracking-tight">
-                {feature.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {feature.description}
-              </p>
-            </li>
+            <StaggerItem key={feature.title}>
+              <div className="rounded-2xl border border-border/80 bg-background px-5 py-6 transition-shadow duration-300 hover:shadow-md">
+                <h3 className="text-lg font-semibold tracking-tight">
+                  {feature.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {feature.description}
+                </p>
+              </div>
+            </StaggerItem>
           ))}
-        </ul>
+        </Stagger>
       </div>
     </section>
   );
