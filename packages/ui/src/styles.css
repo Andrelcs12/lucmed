@@ -1,3 +1,5 @@
+@import "tw-animate-css";
+
 /* LucMed — tokens base (clínico, limpo, sem dark mode por enquanto) */
 :root {
   --background: #f7fafb;
@@ -65,6 +67,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --shadow-xs: 0 1px 2px 0 rgb(15 31 36 / 0.05);
 }
 
 @layer base {
