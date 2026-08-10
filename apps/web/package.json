@@ -6,8 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write"
+    "lint": "node ../../node_modules/@biomejs/biome/bin/biome check .",
+    "format": "node ../../node_modules/@biomejs/biome/bin/biome format --write .",
+    "typecheck": "node ../../node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@lucmed/ui": "*",

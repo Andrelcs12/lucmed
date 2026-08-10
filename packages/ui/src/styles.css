@@ -29,7 +29,12 @@
   --input: #d5e3e6;
   --ring: #0f766e;
 
-  --radius: 0.5rem;
+  --success: #0f766e;
+  --success-foreground: #f0fdfa;
+  --warning: #b45309;
+  --warning-foreground: #fffbeb;
+
+  --radius: 0.625rem;
 }
 
 @theme inline {
@@ -49,6 +54,10 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -56,4 +65,19 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
 }
