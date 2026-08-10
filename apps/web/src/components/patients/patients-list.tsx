@@ -10,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@lucmed/ui/components/select";
-import { Skeleton } from "@lucmed/ui/components/skeleton";
 import {
   Table,
   TableBody,
@@ -19,9 +18,14 @@ import {
   TableHeader,
   TableRow,
 } from "@lucmed/ui/components/table";
-import { AlertCircle, Plus, RefreshCw, Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import {
+  EmptyBlock,
+  ErrorBlock,
+  LoadingBlock,
+} from "@/components/ux/state-block";
 import { routes } from "@/constants/routes";
 import { patientsService } from "@/services/patients/patients.service";
 import type { Patient } from "@/types/patient";
@@ -142,89 +146,75 @@ export function PatientsList() {
         </Button>
       </div>
 
-      {loading ? (
-        <div className="space-y-3">
-          {["a", "b", "c"].map((id) => (
-            <Skeleton key={id} className="h-14 w-full" />
-          ))}
-        </div>
-      ) : null}
+      {loading ? <LoadingBlock /> : null}
 
       {error ? (
-        <div className="flex flex-col items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-6">
-          <div className="flex items-center gap-2 text-destructive">
-            <AlertCircle className="size-4" />
-            <p className="text-sm font-medium">{error}</p>
-          </div>
-          <Button variant="outline" size="sm" onClick={() => void load()}>
-            <RefreshCw className="size-4" />
-            Tentar novamente
-          </Button>
-        </div>
+        <ErrorBlock message={error} onRetry={() => void load()} />
       ) : null}
 
       {!loading && !error && patients.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border bg-card p-10 text-center">
-          <h2 className="text-lg font-semibold">Nenhum paciente encontrado</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Você ainda não possui pacientes cadastrados ou nenhum resultado
-            corresponde aos filtros.
-          </p>
-          <Button asChild className="mt-6">
-            <Link href={routes.patientsNew}>Cadastrar paciente</Link>
-          </Button>
-        </div>
+        <EmptyBlock
+          title="Nenhum paciente encontrado"
+          description="Você ainda não possui pacientes cadastrados ou nenhum resultado corresponde aos filtros."
+          action={
+            <Button asChild>
+              <Link href={routes.patientsNew}>Cadastrar paciente</Link>
+            </Button>
+          }
+        />
       ) : null}
 
       {!loading && !error && patients.length > 0 ? (
         <>
-          <div className="overflow-x-auto rounded-xl border border-border bg-card">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Documento</TableHead>
-                  <TableHead>Telefone</TableHead>
-                  <TableHead>E-mail</TableHead>
-                  <TableHead>Última consulta</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {pageItems.map((patient) => (
-                  <TableRow key={patient.id}>
-                    <TableCell>
-                      <Link
-                        href={routes.patient(patient.id)}
-                        className="font-medium text-primary hover:underline"
-                      >
-                        {patient.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell>{patient.document}</TableCell>
-                    <TableCell>{patient.phone}</TableCell>
-                    <TableCell>{patient.email}</TableCell>
-                    <TableCell>
-                      {patient.lastAppointmentAt
-                        ? formatDate(patient.lastAppointmentAt)
-                        : "—"}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          patient.status === "active" ? "default" : "outline"
-                        }
-                      >
-                        {patient.status === "active" ? "Ativo" : "Inativo"}
-                      </Badge>
-                    </TableCell>
+          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+            <div className="min-w-[720px] rounded-xl border border-border bg-card">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nome</TableHead>
+                    <TableHead>Documento</TableHead>
+                    <TableHead>Telefone</TableHead>
+                    <TableHead>E-mail</TableHead>
+                    <TableHead>Última consulta</TableHead>
+                    <TableHead>Status</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {pageItems.map((patient) => (
+                    <TableRow key={patient.id}>
+                      <TableCell>
+                        <Link
+                          href={routes.patient(patient.id)}
+                          className="font-medium text-primary hover:underline"
+                        >
+                          {patient.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{patient.document}</TableCell>
+                      <TableCell>{patient.phone}</TableCell>
+                      <TableCell>{patient.email}</TableCell>
+                      <TableCell>
+                        {patient.lastAppointmentAt
+                          ? formatDate(patient.lastAppointmentAt)
+                          : "—"}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            patient.status === "active" ? "default" : "outline"
+                          }
+                        >
+                          {patient.status === "active" ? "Ativo" : "Inativo"}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted-foreground">
               Página {currentPage} de {totalPages} · {patients.length} pacientes
             </p>

@@ -21,9 +21,10 @@ import {
   TabsTrigger,
 } from "@lucmed/ui/components/tabs";
 import { Textarea } from "@lucmed/ui/components/textarea";
-import { AlertCircle, Plus, RefreshCw } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { EmptyBlock, ErrorBlock } from "@/components/ux/state-block";
 import { scheduleService } from "@/services/schedule/schedule.service";
 import type { Appointment } from "@/types/appointment";
 import { formatTime } from "@/utils/format";
@@ -257,18 +258,7 @@ export function ScheduleView() {
         </div>
       ) : null}
 
-      {error ? (
-        <div className="flex flex-col items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-6">
-          <div className="flex items-center gap-2 text-destructive">
-            <AlertCircle className="size-4" />
-            <p className="text-sm font-medium">{error}</p>
-          </div>
-          <Button variant="outline" size="sm" onClick={load}>
-            <RefreshCw className="size-4" />
-            Tentar novamente
-          </Button>
-        </div>
-      ) : null}
+      {error ? <ErrorBlock message={error} onRetry={load} /> : null}
 
       {!loading && !error ? (
         <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
@@ -289,12 +279,10 @@ export function ScheduleView() {
 
             <TabsContent value="day" className="mt-4 space-y-3">
               {dayAppointments.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center">
-                  <p className="font-medium">Nenhuma consulta neste dia</p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Horários livres para atendimento.
-                  </p>
-                </div>
+                <EmptyBlock
+                  title="Nenhuma consulta neste dia"
+                  description="Horários livres para atendimento."
+                />
               ) : (
                 dayAppointments.map((item) => (
                   <AppointmentCard key={item.id} appointment={item} />

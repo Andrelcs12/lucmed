@@ -3,9 +3,9 @@
 import { Badge } from "@lucmed/ui/components/badge";
 import { Button } from "@lucmed/ui/components/button";
 import { Skeleton } from "@lucmed/ui/components/skeleton";
-import { AlertCircle, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ErrorBlock } from "@/components/ux/state-block";
 import { routes } from "@/constants/routes";
 import { dashboardService } from "@/services/dashboard/dashboard.service";
 import type { DashboardData } from "@/types/dashboard";
@@ -62,18 +62,7 @@ export function DashboardView() {
   }
 
   if (error || !data) {
-    return (
-      <div className="flex flex-col items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-6">
-        <div className="flex items-center gap-2 text-destructive">
-          <AlertCircle className="size-4" />
-          <p className="text-sm font-medium">{error ?? "Erro inesperado"}</p>
-        </div>
-        <Button variant="outline" size="sm" onClick={load}>
-          <RefreshCw className="size-4" />
-          Tentar novamente
-        </Button>
-      </div>
-    );
+    return <ErrorBlock message={error ?? "Erro inesperado"} onRetry={load} />;
   }
 
   const maxChart = Math.max(...data.chart.map((item) => item.value), 1);
